@@ -11,5 +11,5 @@ Codes for multi-omics integrative analysis of SETD2-mediated H3K36me3 histone mo
   
 >Note: 
   Detailed discription of Cytoscape analysis and all used softwares can be found in the "Materials and methods" section of the published paper.
-  The ChIP-seq and RNA-seq data has been published in our previous work (PMID: 34020310, DOI: 10.1016/j.redox.2021.102004), as well as the phenotype information of the mouse model.
+  The ChIP-seq and RNA-seq data have been published in our previous work (PMID: 34020310, DOI: 10.1016/j.redox.2021.102004), as well as the phenotype information of the mouse model.
   For more information and data download, please contact the corresponding authors.
