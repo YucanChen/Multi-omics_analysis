@@ -24,9 +24,12 @@ O=./Rep2_WT_ChIP_SE_rmDup_sorted_bam/`basename $id .marked_duplicates.bam`.rmDup
 M=./Rep2_WT_ChIP_SE_rmDup_sorted_bam/`basename $id .marked_duplicates.bam`.rmDup_metrics.txt REMOVE_DUPLICATES=true && samtools flagstat ./Rep2_WT_ChIP_SE_rmDup_sorted_bam/`basename $id .marked_duplicates.bam`.rmDup.bam>../Rep2_WT_ChIP_SE_rmDup_sorted_bam/`basename $id .marked_duplicates.bam`.rmDup_sorted_bam_stat); done
 exit 0
 
-#  Code chunk 4 ：Bam call peaks
+#  Code chunk 4 ：bam call peaks
 ## <macs2 Call peaks> WT Rep2 example
 #!/bin/bash
 cd ./Rep2_WT_ChIP_SE_rmDup_sorted_bam/
 macs2 callpeak -t colon_ChIP_S5_R1_001.rmDup.bam -c colon_Input_S10_R1_001.rmDup.bam -f BAM -g mm -n Rep2WT_H3K36me3_S5_R1_broad01 -B -q 0.05 --broad --nomodel --scale-to large --outdir ./Rep2_WT_ChIP_SE_H3K36me3_macs2callpeaks_broad01
 exit 0
+
+# rmdup bam to bai index
+ls *.rmDup.bam| while read id;do samtools index -b $id;done
