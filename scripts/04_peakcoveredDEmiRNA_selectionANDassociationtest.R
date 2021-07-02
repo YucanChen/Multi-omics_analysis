@@ -3,7 +3,6 @@ library(ggplot2)
 library(ggpubr)
 library(clusterProfiler)
 library(org.Mm.eg.db)
-
 DEmiRNA_exp <- read.xlsx("svanoval_DESeq2_rmnoval_morethan10_FDRadj.xlsx",sheet = "DE_miRNAs")
 miRNA_exp <- read.xlsx("svanoval_DESeq2_rmnoval_morethan10_FDRadj.xlsx",sheet = "DESeq2_result")
 miRNA_exp <- miRNA_exp[,c(1,3,4,8,9,17,19)]
@@ -20,8 +19,8 @@ ranked_peakcovered_DEmiRNA_targets_down <- ranked_peakcovered_DEmiRNA_targets_do
 ranked_peakcovered_DEmiRNA_targets_up <- peakcovered_DEmiRNA_targets[which(peakcovered_DEmiRNA_targets$target_log2FC > 0),]
 ranked_peakcovered_DEmiRNA_targets_up <- ranked_peakcovered_DEmiRNA_targets_up[order(abs(ranked_peakcovered_DEmiRNA_targets_up$target_log2FC),decreasing = TRUE),]
 
-write.table(unique(ranked_peakcovered_DEmiRNA_targets_down$target_entrez),"part2_peakcovered_DEmiRNAtargets/ranked_peakcovered_DEmiRNA_targets_down_entrez.txt",sep = "\t",col.names = FALSE,row.names = FALSE)
-write.table(unique(ranked_peakcovered_DEmiRNA_targets_up$target_entrez),"part2_peakcovered_DEmiRNAtargets/ranked_peakcovered_DEmiRNA_targets_up_entrez.txt",sep = "\t",col.names = FALSE,row.names = FALSE)
+write.table(unique(ranked_peakcovered_DEmiRNA_targets_down$target_entrez),"ranked_peakcovered_DEmiRNA_targets_down_entrez.txt",sep = "\t",col.names = FALSE,row.names = FALSE)
+write.table(unique(ranked_peakcovered_DEmiRNA_targets_up$target_entrez),"ranked_peakcovered_DEmiRNA_targets_up_entrez.txt",sep = "\t",col.names = FALSE,row.names = FALSE)
 
 # Association test
 association_table[which(association_table$miRNA_pvalue < 0.05 & abs(association_table$miRNA_log2FC) >= 0.7 & (association_table$H3K36me3_FDR>=0.05)),'diff'] <- 'Only DE-miRNAs'
@@ -38,7 +37,6 @@ p1 <- p1 +
   geom_hline(yintercept = c(0,1,-1), color = 'gray', linetype = 2,size=0.5)+
   geom_vline(xintercept = c(-1), color = 'gray', linetype = 2)+theme(axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold"))
 p1 <- p1 + geom_smooth(method = "lm", se=FALSE, color="#3333CC", formula = y ~ x, size = 1)
-p1 #+ geom_text(aes(y = miRNA_log2FC + .1, label = gene_id,size = 0.001))
 p1 <- p1 + geom_smooth(method = "lm", se=FALSE, color="blue", formula = y ~ x, size = 1)
 p1
 model.lm <- lm(miRNA_log2FC ~ H3K36me3_log2FC, data = association_table )
@@ -47,7 +45,6 @@ cor.test(association_table$miRNA_log2FC,association_table$H3K36me3_log2FC,method
 
 ## de No_Diff miRNAs：
 new_association_table <- association_table[which(association_table$diff!="No-diff_miRNAs"),]
-#new_association_table[which(new_association_table$diff=='Only DMR-miRNAs'),"gene_id"] <- ""
 p2 <- ggplot(new_association_table, aes(x = H3K36me3_log2FC, y = miRNA_log2FC)) +
   geom_point(aes(color = diff), size = 1.1) +
   scale_colour_manual(limits = c('Only DE-miRNAs', 'DMR-DE-miRNAs', 'Only DMR-miRNAs'), values = c('#9900CC', 'red', '#66CC00'), labels = c('Only DE-miRNAs', 'DMR-DE-miRNAs', 'Only DMR-miRNAs','No-diff_miRNAs')) +
